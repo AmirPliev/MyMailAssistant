@@ -1,0 +1,36 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_POCKETBASE_URL=http://localhost:8080
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+    depends_on:
+      - pocketbase
+      - backend
+
+  pocketbase:
+    build:
+      context: ./pocketbase
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./pocketbase/pb_data:/pb/pb_data
+      - ./pocketbase/pb_migrations:/pb/pb_migrations
+    environment:
+      - PB_ADMIN_EMAIL=${PB_ADMIN_EMAIL}
+      - PB_ADMIN_PASSWORD=${PB_ADMIN_PASSWORD}
+
+  backend:
+    build:
+      context: ./backend
+    dockerfile: Dockerfile # Should probably have a prod version without --reload, but for now this works
+    ports:
+      - "8000:8000"
+    environment:
+      - POCKETBASE_URL=http://pocketbase:8080
+    depends_on:
+      - pocketbase
