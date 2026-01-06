@@ -36,6 +36,7 @@ services:
       - POCKETBASE_URL=http://pocketbase:8080
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
+      - QDRANT_API_KEY=${QDRANT_API_KEY}
     depends_on:
       - pocketbase
       - qdrant
@@ -46,3 +47,5 @@ services:
       - "6333:6333"
     volumes:
       - ./qdrant/storage:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}

@@ -45,6 +45,7 @@ services:
       - POCKETBASE_URL=http://pocketbase:8080
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
+      - QDRANT_API_KEY=${QDRANT_API_KEY:-dev_key}
     depends_on:
       - pocketbase
       - qdrant
@@ -56,6 +57,8 @@ services:
       - "6334:6334"
     volumes:
       - ./qdrant/storage:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY:-dev_key}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
       interval: 10s

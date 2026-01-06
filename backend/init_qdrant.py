@@ -9,10 +9,11 @@ logger = logging.getLogger(__name__)
 
 QDRANT_HOST = os.getenv("QDRANT_HOST", "qdrant")
 QDRANT_PORT = int(os.getenv("QDRANT_PORT", 6333))
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 COLLECTIONS_DIR = "/app/qdrant_collections"
 
 def init_qdrant():
-    client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+    client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY)
     
     if not os.path.exists(COLLECTIONS_DIR):
         logger.warning(f"Collections directory {COLLECTIONS_DIR} not found.")

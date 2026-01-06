@@ -45,6 +45,10 @@ The project includes an `entrypoint.sh` for PocketBase that automatically create
 
 Qdrant collections are defined as JSON files in `qdrant/collections/`. On backend startup, the `backend/init_qdrant.py` script ensures all defined collections exist in the vector database. This acts as a migration mechanism for the vector schema.
 
+### Qdrant Authentication
+
+Qdrant is secured using an API key defined by the `QDRANT_API_KEY` environment variable. The Qdrant service receives this as `QDRANT__SERVICE__API_KEY`, and the backend client uses it for all requests.
+
 ## Development Workflow
 
 1.  **Modifying Frontend**: Changes in `frontend/src` will automatically reload thanks to Docker volume mapping in `docker compose`.
