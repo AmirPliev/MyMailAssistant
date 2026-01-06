@@ -43,3 +43,6 @@ Migrations are stored in `pocketbase/pb_migrations` and are included in the repo
 ## Python Backend
 
 The backend uses FastAPI and is integrated with LangChain and LangGraph for intelligent mail processing.
+## Qdrant (Vector Database)
+
+Qdrant is used for storing and searching vector embeddings. Persistent data is stored in  (git-ignored). Collections are automatically initialized on startup based on JSON definitions in .
