@@ -1,0 +1,7 @@
+{
+    "name": "emails",
+    "vectors": {
+        "size": 1536,
+        "distance": "Cosine"
+    }
+}

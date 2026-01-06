@@ -9,6 +9,7 @@ The application follows a three-tier architecture:
 1.  **Frontend (Next.js)**: Responsible for the user interface and client-side logic.
 2.  **Auth & Persistence (PocketBase)**: Handles user authentication, file storage, and relational database needs.
 3.  **Intelligence Layer (FastAPI)**: Executes complex logic using LangChain and LangGraph, interacting with AI models and processing mail data.
+4.  **Vector Search (Qdrant)**: Stores and retrieves high-dimensional vector embeddings for advanced search capabilities.
 
 ## Service Communication
 
@@ -18,6 +19,7 @@ graph TD
     Frontend --> PocketBase[PocketBase Auth/DB]
     Frontend --> FastAPI[FastAPI Backend]
     FastAPI --> PocketBase
+    FastAPI --> Qdrant[Qdrant Vector DB]
 ```
 
 ## Configuration
@@ -38,6 +40,10 @@ PocketBase is configured to persist data in `pb_data` which is volume-mounted. M
 ### Automatic Admin Setup
 
 The project includes an `entrypoint.sh` for PocketBase that automatically creates an admin account on the first run using `PB_ADMIN_EMAIL` and `PB_ADMIN_PASSWORD` from the `.env` file. If the admin already exists, it will skip this step.
+
+### Qdrant Collections (Migrations)
+
+Qdrant collections are defined as JSON files in `qdrant/collections/`. On backend startup, the `backend/init_qdrant.py` script ensures all defined collections exist in the vector database. This acts as a migration mechanism for the vector schema.
 
 ## Development Workflow
 

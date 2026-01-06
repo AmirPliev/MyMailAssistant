@@ -7,6 +7,7 @@ A modern web application for mail assistance, built with Next.js, PocketBase, an
 - `frontend/`: Next.js application (Typescript, Tailwind CSS, Shadcn UI).
 - `pocketbase/`: PocketBase backend (Auth & Database).
 - `backend/`: Python backend (FastAPI, LangChain, LangGraph).
+- `qdrant/`: Qdrant vector database (Vector Search).
 
 ## Getting Started
 
@@ -25,6 +26,7 @@ docker compose up --build
 - Frontend: [http://localhost:3000](http://localhost:3000)
 - PocketBase Admin: [http://localhost:8090/_/](http://localhost:8090/_/)
 - Backend API: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Qdrant Dashboard: [http://localhost:6333/dashboard](http://localhost:6333/dashboard)
 
 ### Production
 

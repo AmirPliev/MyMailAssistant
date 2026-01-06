@@ -6,3 +6,4 @@ langgraph
 pydantic
 python-dotenv
 httpx
+qdrant-client

@@ -27,10 +27,22 @@ services:
   backend:
     build:
       context: ./backend
-    dockerfile: Dockerfile # Should probably have a prod version without --reload, but for now this works
+    dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    volumes:
+      - ./qdrant/collections:/app/qdrant_collections
     environment:
       - POCKETBASE_URL=http://pocketbase:8080
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
     depends_on:
       - pocketbase
+      - qdrant
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - ./qdrant/storage:/qdrant/storage
