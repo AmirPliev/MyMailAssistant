@@ -54,12 +54,29 @@ Description: A background worker that pulls unread emails into the database.
   * [x] **Passing:** Manual verification in Pocketbase Admin UI shows the test email.  
 * [x] **Documentation:** Update Backend code quality (Developer Guide) and .env.template with: SYNC_INTERVAL_SECONDS, DRY_RUN, and POCKETBASE_URL.
 
-## **UMA-1.5: Real-time Next.js Dashboard**
+## **UMA-1.5: Authentication & Route Protection**
+
+Description: Secure the dashboard using PocketBase authentication and Next.js middleware.
+
+* [x] **Logic:**  
+  * [x] Add Shadcn `login-02` block using `npx shadcn@latest add login-02`.  
+  * [x] Create a `/login` route with a clean, branded sign-in form.  
+  * [x] Implement login/logout functionality using the PocketBase JavaScript SDK.
+  * [x] Implement Next.js Middleware to protect all routes under `/dashboard` (redirect to `/login` if unauthenticated).  
+  * [x] Setup "Redirect-back": Capture the intended URL as a query parameter and redirect there after successful login.  
+* [x] **Tests:**  
+  * [x] **Written:** Navigate to `/dashboard` without a session. Verify redirect to `/login`.  
+  * [x] **Passing:** Manual verification in browser.
+  * [x] **Written:** Log in successfully. Verify redirect to the initially requested page (or dashboard by default).  
+  * [x] **Passing:** Manual verification in browser.
+* [x] **Documentation:** Update Frontend documentation with details on the auth flow and protected routes.
+
+## **UMA-1.6: Real-time Next.js Dashboard**
 
 Description: A visual "Mirror" of the inbox metadata.
 
 * [ ] **Logic:**  
-  * [ ] Create a Next.js page /dashboard using Tailwind CSS and ShadCN components.  
+  * [ ] Create a Next.js page `/dashboard` using Tailwind CSS and ShadCN components.  
   * [ ] Use the pocketbase JavaScript SDK to fetch the initial 50 messages from the messages collection.  
   * [ ] Setup a real-time subscription using pb.collection('messages').subscribe('*', callback) to listen for new records.  
   * [ ] Implement a ShadCN DataTable or Table to display Sender, Subject, and Status.  
