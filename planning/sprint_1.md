@@ -1,0 +1,71 @@
+# **Sprint 1: Foundations & Sync**
+
+**Goal:** Establish the 4-container stack on the VPS and achieve a "Vertical Slice": fetching a real email and displaying it in a real-time web dashboard.
+
+## **UMA-1.2: CI/CD & VPS Environment**
+
+**Description:** Automate the build and deployment pipeline using GitHub Actions.
+
+* \[ \] **Logic:** \- Create .github/workflows/deploy.yml triggered on push to main.  
+  * Use docker/build-push-action@v5 to build images for ./frontend and ./backend.  
+  * Use appleboy/scp-action to copy the docker-compose.yml file to /root/stacks/MyMailAssistant/ on the VPS.  
+  * Use appleboy/ssh-action to log in, pull the latest images from amixx/my-app, and run docker compose up \-d.  
+  * Include a step to prune old images to save disk space on the VPS.  
+* \[ \] **Tests:**  
+  * \[ \] **Written:** Pipeline runs to completion on push to main.  
+  * \[ \] **Passing:** Github Actions log shows green for all build and deploy steps.  
+  * \[ \] **Written:** docker compose ps on VPS shows 4 healthy containers.  
+  * \[ \] **Passing:** Manual check via SSH confirms frontend, backend, pocketbase, and qdrant are 'Up'.  
+* \[ \] **Documentation:** Update README.md with the list of required GitHub Secrets: DOCKER\_USERNAME, DOCKER\_PASSWORD, VPS\_HOST, VPS\_SSH\_KEY.
+
+## **UMA-1.3: Data Layer & Health (Pocketbase \+ Qdrant)**
+
+**Description:** Initialize the relational and vector database schemas.
+
+* \[ \] **Logic:**  
+  * \[ \] **Pocketbase Initialization:** Create three collections:  
+    * mail\_accounts: Fields (email: text, app\_password: text, imap\_server: text, smtp\_server: text).  
+    * messages: Fields (message\_id: text, unique; sender: text; subject: text; body: text; status: select \[new, attention, archived\]; account\_id: relation to mail\_accounts; folder: text).  
+    * agent\_logs: Fields (action: text, timestamp: date, details: json).  
+  * \[ \] **Qdrant Initialization:** Ensure the backend container can connect to qdrant:6333. Create a collection named mail\_vectors using a vector size of 1536 (matching OpenAI text-embedding-3-small or text-embedding-ada-002) and Cosine distance.  
+  * \[ \] **FastAPI Health Check:** Implement a /health endpoint that performs a basic "ping" or GET request to the Pocketbase API and the Qdrant health API.  
+* \[ \] **Tests:**  
+  * \[ \] **Written:** pytest verifying FastAPI can read/write a dummy record to a local/mock Pocketbase instance.  
+  * \[ \] **Passing:** pytest command output is clean.  
+  * \[ \] **Written:** Health check returns 200 OK with JSON {"pocketbase": "connected", "qdrant": "connected"}.  
+  * \[ \] **Passing:** Calling the endpoint via curl or browser returns the expected success JSON.  
+* \[ \] **Documentation:** Add project\_planning/database\_schema.md detailing the fields and relations for future LLM context.
+
+## **UMA-1.4: Basic IMAP Sync (The Ingestor)**
+
+**Description:** A background worker that pulls unread emails into the database.
+
+* \[ \] **Logic:**  
+  * \[ \] Create imap\_worker.py in the Backend using aoimaplib for async IMAP operations.  
+  * \[ \] Logic to iterate through all accounts in the mail\_accounts collection.  
+  * \[ \] Connect via IMAP, select the INBOX folder, and search for UNSEEN messages.  
+  * \[ \] For each message, extract headers (Message-ID, From, Subject) and the plain-text body.  
+  * \[ \] Implement a DRY\_RUN environment variable check: if True, log the email content to console instead of writing to Pocketbase.  
+  * \[ \] Handle duplicates by checking if the message\_id already exists in the messages collection before inserting.  
+* \[ \] **Tests:**  
+  * \[ \] **Written:** pytest for IMAP parsing logic using a sample .eml or MIME string to ensure it extracts the body from multipart messages correctly.  
+  * \[ \] **Passing:** pytest runs successfully.  
+  * \[ \] **Written:** Integration test: Send a real email to an account \-\> Run sync \-\> Verify record exists in PB.  
+  * \[ \] **Passing:** Manual verification in Pocketbase Admin UI shows the test email.  
+* \[ \] **Documentation:** Update Backend README.md with environment variables: SYNC\_INTERVAL\_SECONDS, DRY\_RUN, and POCKETBASE\_URL.
+
+## **UMA-1.5: Real-time Next.js Dashboard**
+
+**Description:** A visual "Mirror" of the inbox metadata.
+
+* \[ \] **Logic:**  
+  * \[ \] Create a Next.js page /dashboard using Tailwind CSS and ShadCN components.  
+  * \[ \] Use the pocketbase JavaScript SDK to fetch the initial 50 messages from the messages collection.  
+  * \[ \] Setup a real-time subscription using pb.collection('messages').subscribe('\*', callback) to listen for new records.  
+  * \[ \] Implement a ShadCN DataTable or Table to display Sender, Subject, and Status.  
+* \[ \] **Tests:**  
+  * \[ \] **Written:** Dashboard renders without React console errors or hydration mismatches.  
+  * \[ \] **Passing:** Dev console is clear.  
+  * \[ \] **Written:** Vibe Check: Create a record manually in PB Admin. Verify it appears in the Next.js UI in under 2 seconds without a manual page refresh.  
+  * \[ \] **Passing:** Real-time update works as expected.  
+* \[ \] **Documentation:** Update Frontend documentation with a list of dependencies added (e.g., pocketbase, shadcn-ui).
