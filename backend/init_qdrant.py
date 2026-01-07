@@ -21,24 +21,28 @@ def init_qdrant():
 
     for filename in os.listdir(COLLECTIONS_DIR):
         if filename.endswith(".json"):
+            collection_name = filename[:-5]  # Default to filename without .json
             with open(os.path.join(COLLECTIONS_DIR, filename), "r") as f:
-                config = json.load(f)
-                name = config["name"]
-                
                 try:
-                    client.get_collection(collection_name=name)
-                    logger.info(f"Collection '{name}' already exists.")
-                except Exception:
-                    logger.info(f"Creating collection '{name}'...")
-                    vectors_config = config.get("vectors", {})
-                    client.create_collection(
-                        collection_name=name,
-                        vectors_config=VectorParams(
-                            size=vectors_config.get("size", 1536),
-                            distance=Distance(vectors_config.get("distance", "Cosine"))
+                    config = json.load(f)
+                    name = config.get("name", collection_name)
+                    
+                    try:
+                        client.get_collection(collection_name=name)
+                        logger.info(f"Collection '{name}' already exists.")
+                    except Exception:
+                        logger.info(f"Creating collection '{name}'...")
+                        vectors_config = config.get("vectors", {})
+                        client.create_collection(
+                            collection_name=name,
+                            vectors_config=VectorParams(
+                                size=vectors_config.get("size", 1536),
+                                distance=Distance(vectors_config.get("distance", "Cosine"))
+                            )
                         )
-                    )
-                    logger.info(f"Collection '{name}' created successfully.")
+                        logger.info(f"Collection '{name}' created successfully.")
+                except Exception as e:
+                    logger.error(f"Failed to process collection file {filename}: {e}")
 
 if __name__ == "__main__":
     init_qdrant()
