@@ -1,5 +1,5 @@
 /// <reference path="../pb_data/types.d.ts" />
-migrate((db) => {
+migrate((dao) => {
     const mail_accounts = new Collection({
         name: "mail_accounts",
         type: "base",
@@ -100,15 +100,15 @@ migrate((db) => {
         ],
     });
 
-    db.saveCollection(mail_accounts);
-    db.saveCollection(messages);
-    db.saveCollection(agent_logs);
-}, (db) => {
-    const mail_accounts = db.findCollectionByNameOrId("mail_accounts");
-    const messages = db.findCollectionByNameOrId("messages");
-    const agent_logs = db.findCollectionByNameOrId("agent_logs");
+    dao.saveCollection(mail_accounts);
+    dao.saveCollection(messages);
+    dao.saveCollection(agent_logs);
+}, (dao) => {
+    const mail_accounts = dao.findCollectionByNameOrId("mail_accounts");
+    const messages = dao.findCollectionByNameOrId("messages");
+    const agent_logs = dao.findCollectionByNameOrId("agent_logs");
 
-    if (agent_logs) db.deleteCollection(agent_logs.id);
-    if (messages) db.deleteCollection(messages.id);
-    if (mail_accounts) db.deleteCollection(mail_accounts.id);
+    if (agent_logs) dao.deleteCollection(agent_logs.id);
+    if (messages) dao.deleteCollection(messages.id);
+    if (mail_accounts) dao.deleteCollection(mail_accounts.id);
 })
