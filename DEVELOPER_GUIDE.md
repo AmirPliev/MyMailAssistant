@@ -105,3 +105,15 @@ This project follows the [Conventional Commits](https://www.conventionalcommits.
 4.  **Typing**: Use Python type hints consistently and as comprehensively as possible.
 5.  **Private Functions**: Prefix internal/private functions and methods with a single underscore `_`.
 6.  **Directory Structure**: Maintain an extremely logical directory structure. Regularly evaluate and refactor the structure to ensure it remains intuitive.
+
+## Agent Workflow & Testing
+
+### Git Operations
+- **No Automatic Commits**: The AI agent MUST NOT automatically commit or push code.
+- **Explicit Approval**: The agent must always ask the user for permission before performing a `git commit` or `git push`.
+- **Post-Issue Workflow**: A request to commit and push should be made immediately after each issue or significant task is completed.
+
+### Testing & Quality Assurance
+- **Test Everything**: Developers (and the agent) should test the code as extensively as possible to ensure correctness and stability.
+- **Verification**: Run local tests, verify UI changes, and check logs before considering a task complete.
+- **Reliability**: Prioritize code that is robust and handle edge cases gracefully.
