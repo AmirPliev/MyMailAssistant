@@ -1,8 +1,6 @@
 services:
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME:-amirpliev}/uma-frontend:latest
     ports:
       - "3000:3000"
     environment:
@@ -13,8 +11,7 @@ services:
       - backend
 
   pocketbase:
-    build:
-      context: ./pocketbase
+    image: ${DOCKER_USERNAME:-amirpliev}/uma-pocketbase:latest
     ports:
       - "8090:8080"
     volumes:
@@ -25,9 +22,7 @@ services:
       - PB_ADMIN_PASSWORD=${PB_ADMIN_PASSWORD}
 
   backend:
-    build:
-      context: ./backend
-    dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME:-amirpliev}/uma-backend:latest
     ports:
       - "8000:8000"
     volumes:

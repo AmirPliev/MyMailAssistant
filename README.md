@@ -36,6 +36,19 @@ To start the application in production mode:
 docker compose -f docker-compose.prod.yml up --build
 ```
 
+## Deployment
+
+This project uses GitHub Actions for CI/CD. When code is pushed to the `main` branch, it automatically builds Docker images and deploys them to a VPS.
+
+### Required GitHub Secrets
+
+To enable the deployment pipeline, configure the following secrets in your GitHub repository:
+
+- `DOCKER_USERNAME`: Your DockerHub username.
+- `DOCKER_PASSWORD`: Your DockerHub password or personal access token.
+- `VPS_HOST`: The IP address or hostname of your VPS.
+- `VPS_SSH_KEY`: A private SSH key for accessing the VPS.
+
 ## PocketBase Migrations
 
 Migrations are stored in `pocketbase/pb_migrations` and are included in the repository. The actual database data is stored in `pocketbase/pb_data` but is excluded from the repository.
