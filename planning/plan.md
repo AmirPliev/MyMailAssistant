@@ -28,7 +28,7 @@ UMA is a personal, LLM-powered mail intelligence system designed to decouple the
 
 *Focus: Connectivity, CI/CD, and basic data flow.*
 
-* \[ \] **Sprint 1: Foundations & Sync** (See [sprint\_1.md](https://www.google.com/search?q=./sprint_1.md))  
+* [x] **Sprint 1: Foundations & Sync** (See [sprint_1.md](./sprint_1.md))  
   * Goal: Establish 4-container stack and pull first email to DB.
 
 ### **Phase 2: The "Mirror & Brain" (Intelligence)**
@@ -43,6 +43,6 @@ UMA is a personal, LLM-powered mail intelligence system designed to decouple the
 
 ## **5\. Deployment & Maintenance**
 
-* \[ \] **Deployment:** GH Action triggers on push to main.  
+* [x] **Deployment:** GH Action triggers on push to main.  
 * \[ \] **Backups:** Setup a cron job on VPS to run pocketbase backup create.  
 * \[ \] **Logs:** Backend logs stored in PB logs collection for remote viewing.
