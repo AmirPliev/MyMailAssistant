@@ -4,14 +4,14 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - "8200:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
     environment:
-      - NEXT_PUBLIC_POCKETBASE_URL=http://localhost:8080
-      - NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+      - NEXT_PUBLIC_POCKETBASE_URL=http://localhost:8202
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:8201
     depends_on:
       - pocketbase
       - backend
@@ -20,7 +20,7 @@ services:
     build:
       context: ./pocketbase
     ports:
-      - "8090:8080"
+      - "8202:8080"
     volumes:
       - ./pocketbase/pb_data:/pb/pb_data
       - ./pocketbase/pb_migrations:/pb/pb_migrations
@@ -37,7 +37,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "8000:8000"
+      - "8201:8000"
     volumes:
       - ./backend:/app
       - ./qdrant/collections:/app/qdrant_collections
@@ -53,8 +53,8 @@ services:
   qdrant:
     image: qdrant/qdrant:latest
     ports:
-      - "6333:6333"
-      - "6334:6334"
+      - "8203:6333"
+      - "8204:6334"
     volumes:
       - ./qdrant/storage:/qdrant/storage
     environment:

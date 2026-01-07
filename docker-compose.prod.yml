@@ -2,10 +2,10 @@ services:
   frontend:
     image: ${DOCKER_USERNAME:-amirpliev}/my-app:uma-frontend
     ports:
-      - "3000:3000"
+      - "8200:3000"
     environment:
-      - NEXT_PUBLIC_POCKETBASE_URL=http://localhost:8080
-      - NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+      - NEXT_PUBLIC_POCKETBASE_URL=http://localhost:8202
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:8201
     depends_on:
       - pocketbase
       - backend
@@ -13,7 +13,7 @@ services:
   pocketbase:
     image: ${DOCKER_USERNAME:-amirpliev}/my-app:uma-pocketbase
     ports:
-      - "8090:8080"
+      - "8202:8080"
     volumes:
       - ./pocketbase/pb_data:/pb/pb_data
       - ./pocketbase/pb_migrations:/pb/pb_migrations
@@ -24,7 +24,7 @@ services:
   backend:
     image: ${DOCKER_USERNAME:-amirpliev}/my-app:uma-backend
     ports:
-      - "8000:8000"
+      - "8201:8000"
     volumes:
       - ./qdrant/collections:/app/qdrant_collections
     environment:
@@ -39,7 +39,8 @@ services:
   qdrant:
     image: qdrant/qdrant:latest
     ports:
-      - "6333:6333"
+      - "8203:6333"
+      - "8204:6334"
     volumes:
       - ./qdrant/storage:/qdrant/storage
     environment:
