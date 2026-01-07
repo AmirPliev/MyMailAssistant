@@ -63,7 +63,7 @@ async def health_check():
 
     # Ping Qdrant
     try:
-        q_client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY)
+        q_client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY, https=False)
         q_client.get_collections()
         health_status["services"]["qdrant"] = "connected"
     except Exception as e:

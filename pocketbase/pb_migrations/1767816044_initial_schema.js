@@ -1,5 +1,6 @@
-/// <reference path="../pb_data/types.d.ts" />
-migrate((dao) => {
+migrate((db) => {
+    const dao = new Dao(db);
+
     const mail_accounts = new Collection({
         name: "mail_accounts",
         type: "base",
@@ -103,7 +104,9 @@ migrate((dao) => {
     dao.saveCollection(mail_accounts);
     dao.saveCollection(messages);
     dao.saveCollection(agent_logs);
-}, (dao) => {
+}, (db) => {
+    const dao = new Dao(db);
+
     const mail_accounts = dao.findCollectionByNameOrId("mail_accounts");
     const messages = dao.findCollectionByNameOrId("messages");
     const agent_logs = dao.findCollectionByNameOrId("agent_logs");
