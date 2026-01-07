@@ -23,10 +23,10 @@ To start the application in development mode with hot reloading:
 docker compose up --build
 ```
 
-- Frontend: [http://localhost:3000](http://localhost:3000)
-- PocketBase Admin: [http://localhost:8090/_/](http://localhost:8090/_/)
-- Backend API: [http://localhost:8000/docs](http://localhost:8000/docs)
-- Qdrant Dashboard: [http://localhost:6333/dashboard](http://localhost:6333/dashboard)
+- Frontend: [http://localhost:8200](http://localhost:8200)
+- PocketBase Admin: [http://localhost:8202/_/](http://localhost:8202/_/)
+- Backend API: [http://localhost:8201/docs](http://localhost:8201/docs)
+- Qdrant Dashboard: [http://localhost:8203/dashboard](http://localhost:8203/dashboard)
 
 ### Production
 

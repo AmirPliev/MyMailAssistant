@@ -7,3 +7,5 @@ pydantic
 python-dotenv
 httpx
 qdrant-client
+aioimaplib
+pytest
