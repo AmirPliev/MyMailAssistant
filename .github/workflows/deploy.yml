@@ -78,7 +78,6 @@ jobs:
           script: |
             cd /root/stacks/MyMailAssistant
             mv docker-compose.prod.yml docker-compose.yml
-            echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" > .env
             docker compose pull
             docker compose up -d
             docker image prune -f
