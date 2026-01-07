@@ -79,3 +79,29 @@ This project follows the [Conventional Commits](https://www.conventionalcommits.
 - `fix(backend): correct email parsing logic`
 - `docs(readme): update installation steps`
 - `build(docker): optimize frontend production image`
+
+## Coding Conventions
+
+### Next.js & JavaScript/TypeScript
+
+1.  **Function Declarations**: Use the `function` keyword for all function definitions. Avoid arrow functions for component or utility definitions.
+    -   *Correct*: `export default function MyComponent() { ... }`
+    -   *Incorrect*: `const MyComponent = () => { ... }`
+2.  **Logic and Layout Separation**: Always separate logic from layout.
+    -   Component files should contain only JSX and layout-related code.
+    -   All state, effects, and business logic must be encapsulated in a custom hook.
+3.  **Folder Structure**: Components are organized into `features/` and `components/` folders. Each significant component has its own folder containing:
+    -   `ComponentName.tsx`: The layout component.
+    -   `useComponentName.ts`: The custom hook containing the logic.
+    -   `index.ts`: The entry point that exports necessary parts.
+4.  **Exports**: Use direct default exports on the function declaration. Avoid `export default ComponentName;` at the end of the file.
+5.  **State Management**: Use `useContext` for global or cross-feature state, combined with custom hooks for a clean interface.
+
+### Python
+
+1.  **Readability Above All**: Focus on making code clean, human-readable, and easy to understand.
+2.  **File Length**: Keep files concise. Break down files that exceed **100-200 lines**.
+3.  **Function Length**: Keep functions small and focused. An internal alert should trigger if a function exceeds **20 lines**.
+4.  **Typing**: Use Python type hints consistently and as comprehensively as possible.
+5.  **Private Functions**: Prefix internal/private functions and methods with a single underscore `_`.
+6.  **Directory Structure**: Maintain an extremely logical directory structure. Regularly evaluate and refactor the structure to ensure it remains intuitive.
