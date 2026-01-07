@@ -27,7 +27,7 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/uma-frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/my-app:uma-frontend
 
       - name: Build and push Backend
         uses: docker/build-push-action@v5
@@ -35,7 +35,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/uma-backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/my-app:uma-backend
 
       - name: Build and push PocketBase
         uses: docker/build-push-action@v5
@@ -43,7 +43,7 @@ jobs:
           context: ./pocketbase
           file: ./pocketbase/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/uma-pocketbase:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/my-app:uma-pocketbase
 
   deploy:
     runs-on: ubuntu-latest

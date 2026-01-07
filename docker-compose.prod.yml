@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: ${DOCKER_USERNAME:-amirpliev}/uma-frontend:latest
+    image: ${DOCKER_USERNAME:-amirpliev}/my-app:uma-frontend
     ports:
       - "3000:3000"
     environment:
@@ -11,7 +11,7 @@ services:
       - backend
 
   pocketbase:
-    image: ${DOCKER_USERNAME:-amirpliev}/uma-pocketbase:latest
+    image: ${DOCKER_USERNAME:-amirpliev}/my-app:uma-pocketbase
     ports:
       - "8090:8080"
     volumes:
@@ -22,7 +22,7 @@ services:
       - PB_ADMIN_PASSWORD=${PB_ADMIN_PASSWORD}
 
   backend:
-    image: ${DOCKER_USERNAME:-amirpliev}/uma-backend:latest
+    image: ${DOCKER_USERNAME:-amirpliev}/my-app:uma-backend
     ports:
       - "8000:8000"
     volumes:
