@@ -23,7 +23,7 @@ export default function InboxCard({ className, emails, ...props }: InboxCardProp
     return (
         <div
             className={cn(
-                "flex flex-col rounded-3xl bg-card text-card-foreground p-6 shadow-sm overflow-hidden",
+                "flex flex-col rounded-xl bg-card text-card-foreground p-6 shadow-sm overflow-hidden",
                 className
             )}
             {...props}

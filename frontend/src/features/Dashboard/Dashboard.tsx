@@ -30,7 +30,7 @@ export default function Dashboard() {
                 </header>
 
                 {/* Bento Grid Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[180px]">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 auto-rows-[180px]">
 
                     {/* Large Inbox Feed - Spans 2 cols, 3 rows */}
                     <div className="md:col-span-2 lg:col-span-2 row-span-3">

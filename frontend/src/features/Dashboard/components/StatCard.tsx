@@ -22,7 +22,7 @@ export default function StatCard({
     return (
         <div
             className={cn(
-                "flex flex-col justify-between p-6 rounded-3xl shadow-sm transition-all hover:shadow-md",
+                "flex flex-col justify-between p-6 rounded-xl shadow-sm transition-all hover:shadow-md",
                 variant === "dark" && "bg-card text-card-foreground",
                 variant === "secondary" && "bg-secondary text-secondary-foreground",
                 variant === "primary" && "bg-primary text-primary-foreground",

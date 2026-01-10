@@ -6,7 +6,7 @@ export default function ComposeCard({ className, ...props }: React.HTMLAttribute
     return (
         <div
             className={cn(
-                "flex flex-col p-6 rounded-3xl bg-secondary text-secondary-foreground shadow-sm",
+                "flex flex-col p-6 rounded-xl bg-secondary text-secondary-foreground shadow-sm",
                 className
             )}
             {...props}

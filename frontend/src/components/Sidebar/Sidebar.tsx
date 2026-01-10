@@ -12,7 +12,7 @@ export default function Sidebar({ className, activeItem = "inbox", onLogout, ...
     const { navItems } = useSidebar(activeItem);
 
     return (
-        <div className={cn("hidden md:flex flex-col w-56 p-6 h-screen sticky top-0", className)} {...props}>
+        <div className={cn("hidden md:flex flex-col w-56 p-6 h-screen sticky top-0 bg-sidebar border-r border-sidebar-border", className)} {...props}>
             <div className="mb-10 pl-2">
                 <h1 className="text-xl font-bold tracking-tight text-foreground">MyMailAssistant</h1>
             </div>
