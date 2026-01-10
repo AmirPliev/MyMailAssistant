@@ -9,10 +9,14 @@ import ComposeCard from "./components/ComposeCard";
 import { Activity, Database, Zap } from "lucide-react";
 
 export default function Dashboard() {
-    const { user, handleLogout, mockData } = useDashboard();
+    const { user, handleLogout, mockData, loading, error, loadMore, hasMore, loadingMore } = useDashboard();
 
     if (!user) {
         return <div className="flex h-screen items-center justify-center font-medium bg-background text-foreground">Checking session...</div>;
+    }
+
+    if (loading) {
+        return <div className="flex h-screen items-center justify-center font-medium bg-background text-foreground">Loading messages...</div>;
     }
 
     return (
@@ -29,12 +33,26 @@ export default function Dashboard() {
                     {/* Mobile Menu trigger could go here */}
                 </header>
 
+                {error && (
+                    <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive">
+                        <p className="font-medium">Failed to load messages</p>
+                        <p className="text-sm mt-1 opacity-80">{error}</p>
+                    </div>
+                )}
+
                 {/* Bento Grid Layout */}
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 auto-rows-[180px]">
 
                     {/* Large Inbox Feed - Spans 2 cols, 3 rows */}
                     <div className="md:col-span-2 lg:col-span-2 row-span-3">
-                        <InboxCard emails={mockData.emails} className="h-full" />
+                        <InboxCard
+                            emails={mockData.emails}
+                            totalUnread={mockData.stats.unread}
+                            className="h-full"
+                            onLoadMore={loadMore}
+                            hasMore={hasMore}
+                            loadingMore={loadingMore}
+                        />
                     </div>
 
                     {/* AI Summaries / Insight - Spans 1 col, 2 rows */}

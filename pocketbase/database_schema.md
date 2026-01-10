@@ -9,10 +9,15 @@ Stores connection details for synced email accounts.
 
 | Field | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
+| `user_id` | `relation` | Yes | Links to the user who owns this account. |
 | `email` | `email` | Yes | The email address of the account. |
 | `app_password` | `text` | Yes | The application-specific password. |
 | `imap_server` | `text` | Yes | IMAP server address (e.g., imap.gmail.com). |
 | `smtp_server` | `text` | Yes | SMTP server address (e.g., smtp.gmail.com). |
+
+**Access Rules**:
+- Users can only view/edit/delete their own mail accounts
+- Messages are filtered by account ownership (via `account_id.user_id`)
 
 ### `messages`
 Stores email metadata and content.

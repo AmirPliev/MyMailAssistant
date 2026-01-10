@@ -1,36 +1,139 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import pb from "@/lib/pocketbase";
+import { PBMessage, UIEmail, transformMessageToEmail } from "./types";
+
+interface User {
+    id: string;
+    email?: string;
+    name?: string;
+    [key: string]: any; // Allow additional PocketBase fields
+}
 
 export function useDashboard() {
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | null>(null);
+    const [emails, setEmails] = useState<UIEmail[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [totalUnread, setTotalUnread] = useState(0);
 
-    // Mock Data for UI Development
+    // Stats data
+    const stats = {
+        unread: totalUnread, // Use total unread count from server
+        storage: { used: 75, total: 100, unit: "GB" },
+        health: "98%"
+    };
+
     const mockData = {
-        stats: {
-            unread: 24,
-            storage: { used: 75, total: 100, unit: "GB" },
-            health: "98%"
-        },
-        emails: [
-            { id: "1", sender: "New Bente", subject: "MyMailAssistant <oan.com>", preview: "Project update...", timestamp: "#edc41f", read: false, initials: "NB", tag: "#edc41f" },
-            { id: "2", sender: "Sparish Inverement", subject: "nm.t.oomailing.com", preview: "Your invoice is ready...", timestamp: "#edc41f", read: false, initials: "SI", tag: "#edc41f" },
-            { id: "3", sender: "Coptornity", subject: "MyMailAssistant@nars.com", preview: "Login alert for your account", timestamp: "7:30 PM", read: true, initials: "CO" },
-            { id: "4", sender: "How Bun Isioating", subject: "Email from t/ Email", preview: "Weekly newsletter...", timestamp: "7:00 AM", read: true, initials: "HB" },
-            { id: "5", sender: "Connect with/ttowky", subject: "gmail.com", preview: "Invitation to connect", timestamp: "7:00 AM", read: true, initials: "CW" },
-            { id: "6", sender: "Moniting unoeacent", subject: "Issue year 11", preview: "Subscription renewal reminder", timestamp: "7:00 PM", read: true, initials: "MU" },
-            { id: "7", sender: "Talrfte onr", subject: "Hello Ahmandojf@gmail.com", preview: "Checking in on the project status", timestamp: "9:00 PM", read: true, initials: "TO" }
-        ]
+        stats,
+        emails
     };
 
     useEffect(function () {
         if (pb.authStore.isValid) {
-            setUser(pb.authStore.model);
+            setUser(pb.authStore.model as User);
         } else {
             router.push("/login?callbackUrl=/dashboard");
         }
     }, [router]);
+
+    // Fetch total unread count
+    async function fetchTotalUnread() {
+        try {
+            const result = await pb.collection('messages').getList<PBMessage>(1, 1, {
+                filter: 'status = "new"',
+            });
+            setTotalUnread(result.totalItems);
+        } catch (err) {
+            console.error('Failed to fetch unread count:', err);
+        }
+    }
+
+    // Fetch initial messages
+    useEffect(function () {
+        if (!user) return;
+
+        async function fetchMessages() {
+            try {
+                setLoading(true);
+                const records = await pb.collection('messages').getList<PBMessage>(1, 50, {
+                    sort: '-created',
+                });
+
+                const transformedEmails = records.items.map(transformMessageToEmail);
+                setEmails(transformedEmails);
+                setHasMore(records.totalPages > 1);
+                setError(null);
+
+                // Fetch total unread count
+                await fetchTotalUnread();
+            } catch (err: any) {
+                console.error('Failed to fetch messages:', err);
+                setError(err.message || 'Failed to load messages');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchMessages();
+    }, [user]);
+
+    // Load more messages (infinite scroll)
+    const loadMore = useCallback(async function () {
+        if (loadingMore || !hasMore) return;
+
+        try {
+            setLoadingMore(true);
+            const nextPage = page + 1;
+            const records = await pb.collection('messages').getList<PBMessage>(nextPage, 50, {
+                sort: '-created',
+            });
+
+            const transformedEmails = records.items.map(transformMessageToEmail);
+            setEmails(prev => [...prev, ...transformedEmails]);
+            setPage(nextPage);
+            setHasMore(nextPage < records.totalPages);
+        } catch (err: any) {
+            console.error('Failed to load more messages:', err);
+        } finally {
+            setLoadingMore(false);
+        }
+    }, [page, loadingMore, hasMore]);
+
+    // Set up real-time subscription
+    useEffect(function () {
+        if (!user) return;
+
+        const unsubscribe = pb.collection('messages').subscribe<PBMessage>('*', function (e) {
+            if (e.action === 'create') {
+                const newEmail = transformMessageToEmail(e.record);
+                setEmails(prev => [newEmail, ...prev]);
+                // Update unread count
+                if (e.record.status === 'new') {
+                    setTotalUnread(prev => prev + 1);
+                }
+            } else if (e.action === 'update') {
+                const updatedEmail = transformMessageToEmail(e.record);
+                setEmails(prev => prev.map(email =>
+                    email.id === updatedEmail.id ? updatedEmail : email
+                ));
+                // Refresh unread count
+                fetchTotalUnread();
+            } else if (e.action === 'delete') {
+                setEmails(prev => prev.filter(email => email.id !== e.record.id));
+                // Refresh unread count
+                fetchTotalUnread();
+            }
+        });
+
+        return function () {
+            unsubscribe.then(unsub => unsub());
+        };
+    }, [user]);
 
     function handleLogout() {
         pb.authStore.clear();
@@ -40,6 +143,11 @@ export function useDashboard() {
     return {
         user,
         handleLogout,
-        mockData
+        mockData,
+        loading,
+        loadingMore,
+        error,
+        loadMore,
+        hasMore
     };
 }
