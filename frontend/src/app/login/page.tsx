@@ -22,7 +22,7 @@ export default function LoginPage() {
                     </div>
                 </div>
             </div>
-            <div className="bg-muted relative hidden lg:block">
+            <div className="bg-secondary relative hidden lg:block">
                 <img
                     src="/placeholder.svg"
                     alt="Image"
