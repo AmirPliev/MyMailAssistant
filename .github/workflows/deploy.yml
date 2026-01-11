@@ -28,6 +28,9 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/my-app:uma-frontend
+          build-args: |
+            NEXT_PUBLIC_POCKETBASE_URL=http://${{ secrets.VPS_HOST }}:8202
+            NEXT_PUBLIC_BACKEND_URL=http://${{ secrets.VPS_HOST }}:8201
 
       - name: Build and push Backend
         uses: docker/build-push-action@v5

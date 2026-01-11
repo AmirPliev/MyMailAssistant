@@ -8,6 +8,15 @@ RUN npm install
 # Rebuild the source code only when needed
 FROM node:20-alpine AS builder
 WORKDIR /app
+
+# Accept build arguments
+ARG NEXT_PUBLIC_POCKETBASE_URL
+ARG NEXT_PUBLIC_BACKEND_URL
+
+# Set as environment variables for the build
+ENV NEXT_PUBLIC_POCKETBASE_URL=$NEXT_PUBLIC_POCKETBASE_URL
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
